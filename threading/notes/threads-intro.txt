@@ -1,0 +1,62 @@
+## Threads: Introduction ## 
+
+ - Threads allow an application to preform multiple tasks concurrently.
+ - A single process can contain multiple threads.
+ - Threads execute the same program independently 
+
+*Memory*
+
+ - Share the same global memory including initalized and uninitalized segments, and heap memory.
+ - Traditional UNIX process is a special case, simply a process that contains one thread
+
+ - Threads in a process can execute concurrently.
+ - On a multiprocessor system, multiple threads can execute in parralel.
+
+ - If one thread is blocked on IO, other threads can execute.
+
+
+-??- Why not use processes -??-
+
+ - Difficult to share information between processes .
+ - Process creation with fork is relatively expensive.
+ - Needs to duplicate file descriptors and other process atributes.
+
+-SOL- 
+
+ - Sharing information between threads is easy and fast, just copy data into shared global or heap variables
+ - Thread creation is faster that process creation, about ten times faster.
+ - On UNIX, threads are implemented using 'clone()' system call. 
+ - Thread creation is faster since many atributes that must be duplicated are instead shared
+ - Syncronization issues. 
+
+## Threading API on UNIX ##
+ - ( Use library pthread.h ) 
+
+ - int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start)(void*), void* arg)
+ 
+ Arguments:
+
+ arg0: *thread, buffer of type pthread_t into which thread idenifier is copied into before pthread() returns
+ arg1: *attr, specifies various attributes for the new thread, if attr is NULL, thread is created with default attributes
+ arg3: void *start, thread starts execution by calling function start
+ arg4: void *arg, *arg is of type void* so we can pass pointer of any type of object to start function.
+
+ - Returns 0 on sucess, 0 on failure.
+
+ ## Thread termination ## 
+
+ - start function performs a return specifying a return value for the thread.
+ - thread calls pthread_exit() 
+ 
+ void pthread_exit(void *retval)
+ 
+ - Calling pthread_exit() is equivalent to preforming return in thread's starting function.
+ - Difference that pthread_exit() can be called from any function, that has been called by starting thread function.
+
+ ## Wait for thread ## 
+
+ int pthread_join(pthread_t thread, void** retval)
+
+ - Waits for the thread idenified by 'thread' to terminate, operation is called joining.
+ - if retval is non NULL pointer, recives copy of thread function return value, value that was specified by when thead preformed return.
+ - calling pthread_join() for thread id that prev. joined is undefined behavior.

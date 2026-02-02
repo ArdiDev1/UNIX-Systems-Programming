@@ -1,0 +1,103 @@
+Multithreaded C Practice Programs (pthread, mutex, condition variables)
+
+====================================================
+LEVEL 1 — THREAD BASICS
+====================================================
+
+1. Hello Threads
+   - Create 3 threads that each print “Hello from thread X”.
+   - Use pthread_create and pthread_join.
+   - Practice passing arguments to threads.
+
+2. Sum of Array (Parallel)
+   - Split an array into N parts.
+   - Each thread computes the sum of its part.
+   - Main thread combines partial results.
+   - Focus: Thread arguments, data partitioning.
+
+3. Find Maximum in Array
+   - Similar to sum, but find the max value per thread.
+   - Combine results safely.
+
+====================================================
+LEVEL 2 — MUTEX AND SHARED DATA
+====================================================
+
+4. Shared Counter (Race Condition)
+   - Multiple threads increment a shared counter.
+   - Observe wrong results without mutex.
+   - Fix using pthread_mutex_t.
+
+5. Bank Account Simulation
+   - Shared account balance with deposits and withdrawals.
+   - Protect updates using a mutex.
+   - Optionally add overdraft detection or logging.
+
+6. Producer–Consumer (Single Slot)
+   - Shared buffer (one integer).
+   - One producer thread writes, one consumer reads.
+   - Use mutex + condition variables (pthread_cond_wait/signal).
+
+====================================================
+LEVEL 3 — CONDITION VARIABLES
+====================================================
+
+7. Bounded Buffer (Multiple Slots)
+   - Circular buffer of fixed size.
+   - Multiple producers and consumers.
+   - Use mutex + two condition variables (not_full, not_empty).
+
+8. Thread Synchronization Order
+   - Threads A, B, C print “A”, “B”, “C” in strict sequence.
+   - Enforce order using condition variables.
+
+====================================================
+LEVEL 4 — REALISTIC COORDINATION
+====================================================
+
+9. Reader–Writer Problem
+   - Multiple readers, single writer.
+   - Readers can read simultaneously.
+   - Implement both reader-priority and writer-priority versions.
+
+10. Dining Philosophers
+   - Classic synchronization problem.
+   - Mutexes represent forks.
+   - Implement deadlock-free version.
+
+11. Barrier Synchronization
+   - Implement a custom barrier (like pthread_barrier_t).
+   - Threads wait until all reach barrier, then continue.
+
+12. Thread Pool
+   - Fixed worker threads pulling tasks from queue.
+   - Synchronize queue access using mutex + condition variables.
+
+====================================================
+BONUS PROJECTS
+====================================================
+
+13. Parallel Merge Sort
+   - Recursively sort halves of an array in parallel.
+   - Limit recursion depth to control thread creation.
+
+14. Traffic Light Simulation
+   - Threads represent cars.
+   - Condition variables control access based on light state.
+
+15. Smoking Problem (Philosopher Variant)
+   - 3 smokers + 1 agent.
+   - Each smoker waits for needed ingredients.
+   - Coordinate with condition variables.
+
+====================================================
+COMPILATION AND DEBUGGING TIPS
+====================================================
+
+Compile:
+    gcc -pthread program.c -o program
+
+Debug Race Conditions:
+    valgrind --tool=helgrind ./program
+    or
+    gcc -fsanitize=thread -g program.c -o program
