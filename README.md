@@ -1,6 +1,6 @@
 # A Collection of UNIX Systems Programs and Notes
 
-i created this repository as a collection of UNIX / POSIX systems programming programs written in C, focused on low-level concurrency, memory management, and process control.
+I created this repository as a collection of UNIX / POSIX systems programming programs written in C, focused on low-level concurrency, memory management, and process control.
 
 The repository consists of standalone modules that explore core operating system concepts such as threading, synchronization, inter-process communication, and performance. Each directory targets a specific systems programming topic and is designed to be largely self-contained.
 
