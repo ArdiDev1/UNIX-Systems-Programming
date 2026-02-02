@@ -1,0 +1,100 @@
+NETWORK STACK
+
+Layers: Application → Transport (TCP/UDP) → Network (IP) → Link → Physical.
+
+Encapsulation: message → segment → datagram → frame.
+
+IP & DNS
+
+IPv4 = 32 bits. Private: 10.x.x.x, 172.16–31.x.x, 192.168.x.x.
+
+DNS maps names → IP.
+
+TCP vs UDP
+
+TCP: reliable, ordered, connection-oriented, byte-stream.
+UDP: unreliable, unordered, connection-less, message-oriented.
+
+SOCKET BASICS
+
+Socket = (IP, port, protocol).
+
+socket(AF_INET, SOCK_STREAM, 0)
+
+Treat like file descriptor (read/write/send/recv).
+
+TCP send/recv RULE
+
+ALWAYS LOOP → may send/recv fewer bytes than requested.
+
+while (sent<n) sent+=send(fd,buf+sent,n-sent,0);
+while (rec<n) rec+=recv(fd,buf+rec,n-rec,0);
+
+CLIENT–SERVER FLOW (TCP)
+
+Server:
+socket → bind → listen → accept → send/recv → close
+
+accept() blocks; returns NEW socket for the client.
+
+Client:
+socket → connect → send/recv → close
+
+getaddrinfo()
+
+Modern way to obtain sockaddr: supports IPv4/IPv6.
+Server: AI_PASSIVE, Client: hostname + port.
+
+ENDIANNESS
+
+Network = big-endian.
+Convert binary data:
+htonl/htons (host→network), ntohl/ntohs (network→host).
+
+DATA ENCODING
+
+TCP = byte stream → you define message boundaries.
+
+Watch for struct padding; avoid sending raw structs unless manually padded + converted.
+
+Strings: ASCII here; real world = UTF-8.
+
+PROTOCOL DESIGN QUESTIONS
+
+Who sends first?
+
+How much does each send?
+
+How to mark message end (newline, size header, sentinel)?
+
+Binary vs text format?
+
+EXAMPLES
+
+SMTP: ASCII lines ending with \r\n; message ends with <CR><LF>.<CR><LF>.
+TFTP-style (LS/GET/EXIT):
+
+Text: "get file\n"
+
+Fixed-size struct (code + filename)
+
+Dynamic: send code, name length, then filename
+ResponseHeader: code, length, then payload bytes.
+
+MULTI-CLIENT SERVERS
+
+accept() blocks → use fork, threads, or select().
+
+ABSOLUTE MUST-KNOWS
+
+TCP ≠ messages → you must define boundaries.
+
+send/recv return may be partial → loop.
+
+Use getaddrinfo() not manual sockaddr.
+
+Convert binary data endian.
+
+Avoid struct padding issues.
+
+Server creates 2 sockets (listening + per-client).

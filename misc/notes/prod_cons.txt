@@ -1,0 +1,34 @@
+#Producer Consumer.
+
+-Producer put things into shared buffer.
+-Consumers take them out.
+
+-Wait on conditon depending on predicate.
+
+pthread_mutex_t mutex;
+pthread_cond_t cond;       // mutex and cond are defined somewhere
+pthread_mutex_lock(&mutex);  // Get the mutex
+
+while (! predicate ) {          // check the predicate
+    pthread_cond_wait(&cond, &mutex);   // wait on the condition, mutex is unlocked!
+    do_something();         // if needed. mutex is locked here!!!
+}
+
+access_shared_resources(); // safe to access the share resources
+pthread_mutex_unlock(&mutex);
+
+// continue to perform other tasks, for example, process fetched data.
+// Note that access_shared_resources() should be short.
+
+#Signal vs. Brodcast:
+
+-Wakes up one waiting thread in the condition.
+pthread_cond_signal(pthread_cond_t *cond)
+
+- Wakes up all waiting threads.
+pthread_cond_brodcast(pthread_cond_t *cond)
+
+
+# Predicate: Logic expression describing the property of an object (or the state) the
+# program needs
+• Examples: the buffer is full, or the buffer is not empty

@@ -1,0 +1,41 @@
+-===- Overview -===-
+
+- Client-Server scenerio, Each application creates a socket, apparatus that allows communication.
+- Server binds its socket to well known address, Name.
+
+# socket() syscall
+fd = socket(domain, type, protocol)
+
+Communication domains:
+
+Sockets exist in a communication domain, detirmines 
+
+-Method of identifying socket.
+-Range of communication.
+
+- Domain: AF_UNIX: allows communication between application on same host
+  *addr format: pathname
+  *structure sockaddr_un
+
+- Domain: IPv4 (AF_INET) domain allows communication between applications running on host connected via (IPv4)
+  *addr format: 32-bit IPv4 address + 16 bit port number
+  *structure sockaddr_in
+
+- Domain: IPv6, (AF_INET6) not as commonly used as IPv4, even though designed as sucessor.
+  *addr 128 bit IPv6 address + 16 bit port number
+  *structure sockaddr_in6
+
+Socket types:
+ * Every socket implementation provides two types: stream and datagram 
+ * SOCK_STREAM, provides reliable, bidirectional, bytestream communication channels
+
+SOCK_STREAM:
+ * Reliable: guaranteed that transferred data is intact
+ * Bidirectional: data may be transmitted in either direction
+
+SOCK_DGRAM:
+ * Data transmittion: Not reliable.
+ * Message bounds are preserved.
+
+UDP (User Datagram Protocol): Uses SOCK_DGRAM
+TCP (Transmittion Control Protocol): Uses SOCK_STREAM

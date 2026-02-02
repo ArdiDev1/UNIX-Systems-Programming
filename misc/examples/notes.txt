@@ -1,0 +1,99 @@
+pthread_create(pthread_t *thread, const pthread_attr_t *attr,
+               void *(*start_routine)(void *), void *arg);
+
+pthread_exit(void *retval);
+
+pthread_join(pthread_t thread, void **retval);
+
+pthread_detach(pthread_t thread);
+
+pthread_mutex_init(pthread_mutex_t *mutex,
+                   const pthread_mutexattr_t *attr);
+
+pthread_mutex_destroy(pthread_mutex_t *mutex);
+
+pthread_mutex_lock(pthread_mutex_t *mutex);
+
+pthread_mutex_trylock(pthread_mutex_t *mutex);
+
+pthread_mutex_unlock(pthread_mutex_t *mutex);
+
+pthread_cond_init(pthread_cond_t *cond,
+                  const pthread_condattr_t *attr);
+
+pthread_cond_destroy(pthread_cond_t *cond);
+
+pthread_cond_wait(pthread_cond_t *cond,
+                  pthread_mutex_t *mutex);
+
+pthread_cond_signal(pthread_cond_t *cond);
+
+pthread_cond_broadcast(pthread_cond_t *cond);
+
+pthread_barrier_init(pthread_barrier_t *barrier,
+                     const pthread_barrierattr_t *attr,
+                     unsigned count);
+
+pthread_barrier_destroy(pthread_barrier_t *barrier);
+
+pthread_barrier_wait(pthread_barrier_t *barrier);
+
+
+GDB CONCURRENCY DEBUGGING SHEET
+
+Start program:
+gdb ./a.out
+run
+
+Check all threads:
+info threads
+thread <id>
+bt
+thread apply all bt    # best command: shows exact line each thread is stuck
+
+Breakpoints:
+break my_func
+break file.c:42
+break pthread_mutex_lock
+break pthread_mutex_unlock
+break file.c:42 if x == 5
+delete breakpoints:
+info breakpoints
+delete <id>
+
+Watch variables (race detection):
+watch myVar
+watch *0xaddress
+info breakpoints
+
+Stepping:
+next
+step
+finish
+continue
+
+Inspecting:
+list
+print var
+ptype var
+info locals
+info args
+
+Finding a freeze / deadlock:
+Ctrl-C
+info threads
+thread apply all bt
+
+Look for:
+- pthread_mutex_lock stuck
+- futex_wait (blocked on mutex)
+- same mutex address in multiple backtraces
+
+General flow for deadlocks:
+1. Ctrl-C
+2. info threads
+3. thread apply all bt
+4. Identify thread blocked on lock and thread holding the lock
+
+Quit:
+quit

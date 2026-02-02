@@ -1,0 +1,48 @@
+#Definitions:
+-Process
+    !Instance of a program currently running on computer
+    !A virtual address space (memory)
+    !Collection of files / sockets (io)
+    !Collection of concurrent threads (execution units)
+
+-Thread: 
+    !Smallest unit of execution managed.
+    by a scheduler.
+    !Light weight entity.
+    !Confined to a sigle process.
+
+-Thread Creation:
+    !Created by another thread.
+    !Given stack to execute and function to run.
+    !When process is created, there is one single thread.
+    !Given a stack to execute and function to run.
+
+-Thread death:
+    !After completing task.
+    !Requested by another thread.
+    !When process dies.
+    !Any thread calls exit()
+
+-Thread return:
+    !do NOT return stack variable from thread function.
+
+-Thread concurrecy (Single core)
+    !When one thread waiting for IO to complete.
+    !Another thead can use CPU.
+    !At any one point, CPU is only used for ONE thead.
+
+-Thread concurrecy (Multicore)
+    !Threads can execute in parallel, one on each core.
+    !Timesharing is still used.
+
+-Joining a thread: pthread_join()
+    !waits for thread to compete.
+    !blocks the calling thread until thread tid terminates.
+    !Equivalent of waitpid() for processes.
+
+#Thread Model
+    Shared             Private (to each)
+    Addr space.         Program counter.
+    Global variable.    Registers.
+    Open files.         Stack.
+    Child processes.    State

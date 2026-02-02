@@ -1,0 +1,57 @@
+-==- Internet Protocol Stack -==- 
+
+Application: supporting network applications.
+(FTP, SMTP, HTTP)
+
+Transport: process-process data transfer (TCP UDP).
+Network: routing of datagrams.
+Transport: process-process data transfer.
+Link: data transfer between neighboring network elements (Ethernet, PPP)
+Physical: bits (on the wire) 
+
+Domain name:
+
+Identification string, formed by rules are procedure in (DNS)
+
+TCP/IP 
+ -Name/IP and port number
+
+-Socket: we get a file descriptor and can send and receive. send() recv()
+
+Server side (TCP):
+
+bind() Server binds (reserves) port for communication
+listen() Server listens on port for "talk" requests
+accept() When request comes.. 
+    -Server allocates seperate socket to accept private communication.
+    -(same host, different host)
+send() / recv()
+close() Conversation ends via a close.
+
+Client side (TCP):
+
+connect() Client init a session.
+ -Need server name, type, and port.
+communication goes on with send() / recv().
+close() client closes a session.
+( No bind is needed on client side )
+
+struct sockaddr.
+    -Holds address information for many types of sockets.
+    -Need addrlen field to indicate size.
+
+Sockets programming: Network protocols.
+    -Need protocols at every level
+    -TCP and ICP are protocols.
+
+Two process talk at application level after tcp connect established.
+    -Who should talk first.
+    -How much should each talk.
+    -How are messages encoded in bytes.
+
+Common options: XML | JSON 
+Endianess:
+    -Big endian: store most significant byte first. first byte at lowest mem addr is largest.
+    -Little endian: store least significant byte first, first byte (lowest mem addr) is smallest.
+
+Both parties need to be in agreement to interpret bytes.

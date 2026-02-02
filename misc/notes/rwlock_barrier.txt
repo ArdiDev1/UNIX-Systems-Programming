@@ -1,0 +1,54 @@
+# Read-Write locks & Barriers
+
+# Mutexes and variables are primitive constructs
+# Read-Write locks and barriers can be built using mutexes.
+  and cond variables.
+
+# Deadlock: State in which no member can make progress.
+
+# Readers-Writers Problem
+    -Multiple readers can read simultaneously.
+    -Reader can start even if other readers are reading.
+    -Only one writer can write at a time.
+
+    -Read and write cannot happen at the same time.
+    -Writer needs to wait for others to finish.
+
+
+# Solution: Read write locks
+ -Use mutex and condition variables.
+ -Keep track of n_readers and writers.
+ -Choose proper predicate.
+ -If not true, wait.
+ -Notify others when thread is done reading/writing.
+
+
+# Pthread Read-Write lock.
+
+// init and destroy read-write lock
+int pthread_rwlock_init(pthread_rwlock_t *rw_lock, attr);
+int pthread_rwlock_destroy(pthread_rwlock_t *rw_lock);
+
+
+#Lock functions for reader
+int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);
+- Gets read lock iff no writer has lock and no writer is
+  blocked on lock.
+- more than on thread can get read lock.
+
+
+# lock function for writer
+int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock);
+- Thread gets write lock iff no reader or writer has lock.
+- Only one writer allowed at a time.
+
+// unlock
+int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);
+
+Read-Write Lock Issues.
+- Writer starvation.
+- Write locks takes precedence over read locks.
+
+Reader starvation: readers dont have a chance.
+- Too many writers. readers have no chance.
+- Another writer starts when writer unlocks.

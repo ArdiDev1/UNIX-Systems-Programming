@@ -1,0 +1,126 @@
+#Threads: Resource Sharing 
+
+Important points:
+ - Each thread gets a stack.
+ - Stacks have a max size.
+ - Global data is shared
+ - Typical stack size: 8 mb.
+ - Threads are lighter weight than processes.
+
+Advantages of threads:
+ - Lower overhead for thread creation.
+ - Lower context switching overhead.
+ - Fewer OS resources.
+
+Thread does something stupid:
+ - Entire process crashes.
+
+Race condition:
+ - Threads execute LOC concurretly.
+ - Execution of a single thread can be interrupted.
+ - Happens at low level. 
+ - Atomic instrucions cannot be interrupted.
+
+Mutex:
+ - Helps prevent race conditions.
+ - At most one thread can acquire the lock anytime.
+ - Waiting threads wake up when lock is released.
+
+Observations: 
+ - Lock and unlock: come in pairs.
+ - Only need one mutex per protected data.
+ - Lock is blocking.
+ - Critical sections should be short.
+
+Sorted linked list example: 
+
+typedef struct list_node_s {
+    int data;
+    struct list_node_s* next;
+} LNode;
+
+int member( int value, LNode* head_p) {
+    LNode* curr_p = head_p;
+    while( curr_p != NULL && curr_p->data < value )
+        curr_p = curr_p->next;
+    if( curr_p == NULL || curr_p->data > value )
+        return 0;
+    else
+        return 1;
+}
+
+int insert( int value, LNode** head_pp) {
+    LNode* curr_p = *head_pp;
+    LNode* pred_p = NULL;
+    LNode* temp_p;
+    while( curr_p != NULL && curr_p->data < value ) {
+        pred_p = curr_p;
+        curr_p = curr_p->next;
+    }
+    if( curr_p == NULL || curr_p->data > value ) {
+        temp_p = (LNode*)malloc( sizeof(LNode) );
+        temp_p = value;
+        temp_p = curr_p;
+    if(pred_p == NULL) /* new first node */
+        *head_pp = temp_p;
+    else
+        pred_p->next = temp_p;
+    return 1;
+} else /* value already in list */
+    return 0;
+}
+
+int delete( int value, LNode** head_pp) {
+    LNode* curr_p = *head_pp;
+    LNode* pred_p = NULL;
+    while( curr_p != NULL && curr_p->data < value ) {
+        pred_p = curr_p;
+        curr_p = curr_p->next;
+    }
+    if( curr_p == NULL || curr_p->data > value ) {
+        if(pred_p == NULL) { /* deleting first node in list */
+            *head_pp = curr_p->next;
+    } else {
+        pred_p->next = curr_p->next;
+    }
+    free(curr_p);
+    return 1;
+} else /* value not in list */
+return 0;
+}
+
+Threaded Approach:
+
+typedef struct list_node_s {
+    int data;
+    struct list_node_s* next;
+    pthread_mutex_t mutex;
+} LNode;
+
+int member( int value, LNode* head_p) 
+    LNode* curr_p;
+
+    pthread_mutex_lock( &head_p_mutex );
+    curr_p = head_p
+    while( curr_p != NULL && curr_p->data < value ) {
+        if( curr_p->next != NULL )
+        pthread_mutex_lock( &(curr_p->next->mutex) );
+    if( curr_p == head_p )
+        pthread_mutex_unlock( &head_p_mutex );
+    }
+    
+    pthread_mutex_unlock( &(curr_p->mutex) );
+    curr_p = curr_p->next;
+
+    if( curr_p == NULL || curr_p->data > data ) {
+        if( curr_p == head_p )
+            pthread_mutex_unlock( &head_p_mutex );
+    if( curr_p != NULL )
+        pthread_mutex_unlock( &(curr_p->mutex) );
+      return 0;
+    } else{
+        if( curr_p == head_p )
+            pthread_mutex_unlock( &head_p_mutex );
+            pthread_mutex_unlock( &(curr_p->mutex) );
+    return 1;
+}
